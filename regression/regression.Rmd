@@ -1,0 +1,752 @@
+---
+title: "lab10 regression"
+author: "Kwan Yu Chuk"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+# exercise 1
+
+Looking at continuous data not groups
+
+The exercise looks at some basic plotting features in R
+
+We will start by creating a linear data series called 'x'
+```{r}
+x <- seq(from = 1980, to =2022, by =2)
+```
+
+This line says create a series of numbers from 1980 to 2022 in steps of 2 and save the result in the 'object' called 'x'
+
+The options available to look at the data object you have created are as follows:
+
+```{r}
+head(x)     # The first few observations
+summary(x)  # A 5-number summary that can be used in a boxplot  
+str(x)      # The structure of the data 
+```
+
+
+```{r}
+x           #  All of the data
+```
+You can also see details of the data in the global environment window (top right window)
+
+You can create an exponential data series called 'y' as follows
+
+```{r}
+y <- exp(seq(from = 1, to =5.3, by =.2))
+```
+
+
+```{r}
+head(y)
+summary(y)
+str(y)
+y
+```
+**Note 1**
+
+**The '~' sign means y 'explained by' x; and x gets plotted on the horizontal and y will get plotted on the vertical**
+
+Note 2 we do not use with(my.data,...) of ... data = my.data as we created the objects we are working with directly in R
+
+In general there will be an extra required step.
+
+```{r}
+plot(y~x)  
+```
+
+Note the difference if you use a ',' rather than a '~' symbol
+
+```{r}
+plot(y,x)  #  reverse the axis
+```
+
+This format expects co-ordinate values so plots the first values on the horizontal axis and the second set of values on the vertical
+
+Generally we can specify the details for the type of plot we want as follows:
+
+```{r}
+plot(y~x, type ='l') #  For a line plot
+plot(y~x, type ='p') #  For plot showing the points
+plot(y~x, type="b")  #  For a plot showing both
+plot(y~x, type="o")  #  variation draw the line through the dots 
+plot(y~x, type="c")  #  variation to draw the line with gaps at the dots
+```
+
+You can also directly apply log transformations to the data you plot
+
+The log transformation will 'undo' the exp on the Y data series. That will make the data a linear rather than curvy
+```{r}
+plot(log(y)~x, type ='p')
+```
+
+Making curvy data approximately linear is a useful trick
+
+We can start to experiment with the plot as:
+
+Take you time to understand what the below code is doing.
+
+```{r}
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: open dots", pch = 1) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: triangles", pch = 2) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: plus sign", pch = 3) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: cross", pch = 4) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: solid dot", pch = 19) 
+```
+
+To change from a scatter plot to a line plot, where we change the line type we use
+```{r}
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: solid line", type ="l", lty =1) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: dashed line", type ="l", lty =2) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: dotted line", type ="l", lty =3) 
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label: dot-dash line", type ="l", lty =4) 
+```
+
+We can start to show some colour with: col= ""
+
+```{r}
+
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label", 
+     pch = 4, 
+     type ="b",
+     col = "red",  # this is the new bit
+     lty = 3) 
+
+
+```
+
+We can make the line and points thicker using: lwd ="" 
+
+```{r}
+
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label", 
+     pch = 4, 
+     type ="b",
+     col = "red",
+     lty = 3,   #  this is the new bit
+     lwd = 4)
+```
+
+We can also control, separately, the font size for any title, 
+axis values, and axis labels using:
+cex.main
+cex.axis
+cex.lab
+
+These commands all work in the same way as for boxplots
+
+```{r}
+plot(y~x, xlab = "the x axis label", ylab ="the y axis label", main ="my R plot",
+     pch = 4, 
+     type ="b",
+     col = "red",
+     lty = 3,
+     lwd = 2,
+     cex.lab=1.5,   #  to control the axis labels
+     cex.axis=0.8,  #  to control the axis values
+     cex.main =1.8) #  to control the title
+
+```
+
+If you really want to control the way the plot looks you can try some fancy stuff.
+
+You can just look at how things work.  The things you really need to know about are explained in more detail in subsequent script files.
+
+
+```{r}
+plot(y~x, xlab = " X axis", ylab ="Y axis", main ="",
+     ylim = c(0, 200),
+     pch = 4, 
+     type ="b",
+     col = "grey",
+     lty = 3,
+     lwd = 1,
+     axes=F) #  to suppress the axis information
+
+box(which = "plot", lty = "solid") #  to add the box back
+
+#  Add the details for the X-axis
+par(tcl= -0.5)
+axis(1, at=seq(from = 1980, to = 2022, by = 5), 
+     labels=seq(from = 1980, to = 2022, by = 5),
+     lwd=0, lwd.ticks=1)
+
+#  Fill in some points for each year
+par(tcl= -0.2)
+axis(1, at=seq(from = 1980, to = 2022, by = 1), 
+     labels=F,
+     lwd=0, lwd.ticks=1)
+
+#  Base information for the Y-axis
+par(tcl= -0.5)
+axis(2, at=seq(from = 0, to = 250, by = 50), 
+     labels=seq(from = 0, to = 250, by = 50),
+     lwd=0, lwd.ticks=1,las=1)
+
+# Add some point to give the figure balance
+par(tcl= -0.2)
+axis(2, at=seq(from = 0, to = 250, by = 10), 
+     labels=F,
+     lwd=0, lwd.ticks=1)
+
+#  Add a legend
+legend("topleft", legend ="exponetial growth",  lty =3, pch=4, bty ="n", col = "grey", cex=.8)
+```
+
+# Exercise 2 linear-log model
+
+This example looks at a model where a log transformation of the 'x' variable 'works' to make things an approximate straight line
+
+## Step 1: read in the data file 
+
+```{r}
+b.mass <- read.csv("Biomassgrowthdata.csv") 
+```
+
+##  Step 2: look at what you have read in.  
+
+There are still three basic options for looking at the data structure.  Nothing new here.
+```{r}
+head(b.mass)     # The first few lines of the data.frame
+summary(b.mass)  # Summary statistics on the the variables
+str(b.mass)      #  Information about what type of variables we have
+```
+##  Step 3. plot
+With grouped data the next step was to create a boxplot. With regression models the next step is to create a scatter plot 
+
+What we do is first plot the data on the original scale. If, on the original data scale, the data does not look linear, we then look at some log transformation options. It is hard to know which transformation to use so we just use all of them!
+
+```{r}
+plot(Biomass~Time, pch= 1,data = b.mass) # does not look linear
+
+plot(log(Biomass)~Time, pch=2,data = b.mass) # does not look linear
+
+plot(log(Biomass)~log(Time), pch=3,data = b.mass) # plausible, but not great
+
+plot(Biomass~log(Time), pch=4,data = b.mass) # The best option, i think...
+```
+
+So now we make the plot look like something we might see in a publication. We just use the options we saw in exercise 1
+
+```{r}
+plot(Biomass~log(Time), 
+     pch = 19,
+     col = "grey",
+     ylab = "Biomass (T)",
+     xlab = "Time (log scale)",
+     data = b.mass)
+```
+
+Let's rotate the the y-axis values using the 'las' option. Depending on the scale of units it is not always possible to do this
+
+```{r}
+plot(Biomass~log(Time), 
+     las =1,   #  this is the line that i have added
+     pch = 19,
+     col = "grey",
+     ylab = "Biomass (T)",
+     xlab = "Time (log scale)",
+     data = b.mass)
+```
+
+So we have data that is approx. linear, but the x-axis values are on a log scale. To obtain a trend line we first estimate a linear model. We estimate the linear-log model as follows:
+
+**notes**
+
+In RStudio, lm stands for "**linear model**." It is a function used to fit linear regression models in R. The lm function is commonly used to estimate the coefficients of a linear relationship between one or more independent variables and a dependent variable. This function is part of the base R package and is widely used for statistical analysis and modeling in R.
+
+```{r}
+lm.1 <- lm(Biomass~log(Time), data = b.mass)  #  the intercept term is automatic
+```
+The above script line says fit a trend line to the data in the object 'b.mass' where the y-values (Biomass) are on the original scale and the x-axis values (Time) are on a log scale. As we are fitting a line R knows to add the intercept term automatically. Then once the model has been fitted save the results to the object lm.1. So lm.! has the details we are interested in.
+
+We can get the details on the estimate of the slope and the intercept as follows:
+
+
+```{r}
+coef(lm.1)
+
+```
+We are not interested in the intercept value but we are interested in the slope estimate. The model form is **Y~log(X)**. As we have a linear-log model, from the properties of logs. we can say: **a one unit increase in log Time results in an expected increase in Biomass of 0.83 tonnes**.
+
+A more preferred interpretation is to use the properties of logs, so that beta/100 = the expected increase in Y from a one percent increase in X. So the convention is to use the following approach and say: **A one percent change in Time leads to an expected increase in biomass of (0.832/100) Tonnes = 8.3 kg**.
+
+To add the trend line we use the abline() function. The abline function needs an intercept value, which is "a" and a slope value "b".
+
+For your model we have found that the intercept = 0.4764123 and the slope = 0.8319737, we can therefore add a thick, green, dashed line as follows
+
+```{r}
+plot(Biomass~log(Time), 
+     las =1,   #  this is the line that i have added
+     pch = 19,
+     col = "grey",
+     ylab = "Biomass (T)",
+     xlab = "Time (log scale)",
+     data = b.mass)
+
+abline(a =0.4764123, b = 0.8319737, lty=2, lwd=2, col = "green")
+```
+
+There is no 'undo' command in R. If we change things we redraw the plot so let's redraw the base plot, and then use the automatic option available in R
+
+The abline() function will read the intercept and slope values directly from the R object we created when we fitted the linear model lm.1 <- lm(Biomass~log(Time), data = b.mass). So we can use 'lm.1' directly with the abline function To add a red trend line to the model we use
+
+```{r}
+plot(Biomass~log(Time), 
+     pch = 19,
+     col = "grey",
+     ylab = "Biomass (T)",
+     xlab = "Time (log scale)",
+     las = 1,
+     data = b.mass)
+
+abline(lm.1, lty =1, col ="red")
+
+#  Adding a legend requires some additional code
+#  let's first add a legend that we don't want
+
+#  The bty ='n' bit says don't add the line outside the legend
+#  To so the full functionality of the legend options see
+
+legend("topleft", legend="trend line", lty=2, lwd=2, col ="red", bty="n")
+```
+
+
+```{{r, warning=FALSE, results='hide',message=FALSE}}
+help(legend)
+```
+
+If we want to add detail about the observations the legend become more complex. Look carefully at the below script and see if you can understand how the legend information works.  You need to be able to do this for Assignment 3!
+
+This example is a good template to use for future work
+
+```{r}
+plot(Biomass~log(Time), 
+     pch = 19,
+     col = "grey",
+     ylab = "Biomass (T)",
+     xlab = "Time (log scale)",
+     las = 1,
+     data = b.mass)
+abline(lm.1, lty=2, lwd=2, col = "black")
+
+legend("topleft", legend=c("observation","trend"), lty=c(NA,2), pch =c(19,NA), 
+       lwd=c(NA,2), col =c("grey","black"), bty="n")
+```
+
+Yes this is a little harder that creating a plot in Excel, BUT all the cool kids use R, and so don't you too want to be cool :)
+> Yes I want
+
+#  Exercise 3.  A log-linear model
+
+##  Read the data into R
+
+```{r}
+Y.data <- read.csv("Yieldchangedata.csv")
+```
+
+
+##  Look at the data structure
+```{r}
+head(Y.data)
+str(Y.data)
+summary(Y.data)
+```
+##  Now let's look at some basic plot options
+
+```{r}
+plot(Yield~Year, data = Y.data)  #  not linear
+plot(log(Yield)~Year, data = Y.data)  #  looks approx. linear, this one easier to explain
+plot(Yield~log(Year), data = Y.data)  #  not liner
+plot(log(Yield)~log(Year), data = Y.data)  #  also approx. linear
+
+```
+```{r}
+lm2_2 <- lm(log(Yield)~log(Year), data = Y.data)
+# We then look at the slope and intercept estimates as follows:
+coef(lm2_2)
+```
+
+
+```{r}
+lm2 <- lm(log(Yield)~Year, data = Y.data)
+# We then look at the slope and intercept estimates as follows:
+coef(lm2)
+```
+```{r}
+summary(lm2_2)
+summary(lm2)
+```
+
+
+In practice the log-log model would also be OK. Note. As I generated the data i know that the true 'data generating process' is a log-linear model. That the log-log model also fits the data pretty well shows how difficult it is to be certain about the 'best' model
+
+Often, there is more than one option for a model and no single right answer. Let's work with our log(Y)-X model for this example
+
+```{r}
+
+plot(log(Yield)~Year, 
+     ylab = "Yield (log scale)",
+     xlab = "", # to suppress the xlab,
+     data = Y.data)  
+#  And if we just wanted a scatter plot we could still add a legend
+#  to the figure
+#legend("topleft", legend = "observations", pch =1, bty ="n")
+#  We now need to fit the trend line to the log-linear model
+
+#  First we estimate the linear model using the lm() function
+#  We use the same format as we have for our plot
+#  so the form is log(Y)~X
+#  We also have to save the output from the linear model
+lm2 <- lm(log(Yield)~Year, data = Y.data)
+# We then look at the slope and intercept estimates as follows:
+coef(lm2)
+#  The point estimate on Year is 0.03.  This is the estimate of the
+#  slope in the model, which is what we are most interested in.
+
+#  As we have a log-linear model we can say the following:
+
+#  A one unit increase in Years (one year) results in an 
+#  expected increase in log yield of 0.03 units.
+
+#  By the properties of logs we can also say:
+
+#  A one unit increase in years results in an
+#  expected increase in yield of 
+#  (Beta x 100) = 0.0304 x 100 = 3.04 percent.
+
+#  This second interpretation is the preferred 
+#  way to report results.  And you need to use this format in
+#  Assignment 3
+
+#  To add the trend line to the plot, rather than 
+#  specify the intercept and slope values 
+#  directly, we call the 'lm2' object
+#  which has stored the intercept and slope
+#  values for us. 
+
+#  Here we also specify the line type,
+#  line width, and  line colour.
+#  Given we have black dots a grey line
+#  might be appropriate
+abline(lm2, lty =1, lwd=1, col ="grey")
+#  If we want to update the legend information to have both 
+#  the point and line information we have
+
+legend("topleft", legend=c("observation","trend"), lty=c(NA,1), pch =c(1,NA), 
+       lwd=c(NA,1), col =c("black","grey"), bty="n")
+```
+
+
+```{r}
+plot(log(Yield)~Year, 
+     ylab = "Yield (log scale)",
+     xlab = "", # to suppress the xlab,
+     data = Y.data)  
+
+abline(lm2, lty =1, lwd=1, col ="grey")
+
+legend("topleft", legend=c("observation","trend"), lty=c(NA,1), pch =c(1,NA), 
+       lwd=c(NA,1), col =c("black","grey"), bty="n")
+```
+
+In practice you don't have to re-paste the script again, you just go back and re-run your earlier script.  I keep copying and pasting material so that you get to see things run all the way through
+
+#  Exercise 4 log-log model
+
+**workflow of regression**
+
+**1. read csv**
+
+**2. have a look of data structure**
+
+**3. try different plot to find the most linear one**
+
+**4. visualize the model**
+
+**5. estimate trend line, slope coefficient and intercept values**
+
+**6. add trend line to model**
+
+**7. add legend**
+
+```{r}
+diversity <- read.csv("distanceanddiversity.csv")
+```
+
+
+```{r}
+head(diversity)
+str(diversity)
+summary(diversity)
+```
+
+
+```{r}
+plot(diversity~altitude, data = diversity)  # not linear
+plot(log(diversity)~altitude, data = diversity)  # not great
+plot(diversity~log(altitude), data = diversity)  # not linear
+plot(log(diversity)~log(altitude), data = diversity)  # closest to a line, so we go with this option
+```
+
+Not everything will look perfect at this stage we are really just getting the hang of the basics. It is possible to subsequently develop more complex models. Now let's build up a reasonably complex plot of the type we might want for a research report or for  an assignment question.
+
+Note that as we will have a figure caption we will add the title information in the figure caption here I just add a title as part of demonstrating the R functions
+
+```{r}
+plot(log(diversity)~log(altitude), data = diversity, type = "p", pch=19, col ="grey",
+     ylab = "Diversity Index (log scale)", 
+     xlab ="Altitude above sea level (log scale)", 
+     main ="Relationship between diversity and altitude",
+     xlim = c(4,5),
+     ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+```
+
+We now estimate a linear model to derive a trend line
+
+```{r}
+lm3 <-lm(log(diversity)~log(altitude), data = diversity)
+```
+
+Next we look at the estimation result to see what the slope coefficient and intercept values are
+```{r}
+coef(lm3)
+```
+The literal interpretation: A one unit change in log altitude is expected to result in a fall in the log of the diversity index of 2.5. The way we report the result in practice: A one percent increase in altitude is associated with an expected fall in the diversity index of 2.53 percent.
+
+Then we add the trend line, to our plot. As we have grey dots we use the default implementation in R which will add a straight black line
+
+```{r}
+plot(log(diversity)~log(altitude), data = diversity, type = "p", pch=19, col ="grey",
+     ylab = "Diversity Index (log scale)", 
+     xlab ="Altitude above sea level (log scale)", 
+     main ="Relationship between diversity and altitude",
+     xlim = c(4,5),
+     ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+lm3 <-lm(log(diversity)~log(altitude), data = diversity)
+
+abline(lm3)
+```
+
+Finally, we add the legend to the plot.  You can guess where to add the plot
+
+```{r}
+plot(log(diversity)~log(altitude), data = diversity, type = "p", pch=19, col ="grey",
+     ylab = "Diversity Index (log scale)", 
+     xlab ="Altitude above sea level (log scale)", 
+     main ="Relationship between diversity and altitude",
+     xlim = c(4,5),
+     ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+lm3 <-lm(log(diversity)~log(altitude), data = diversity)
+
+abline(lm3)
+
+legend("bottomleft", legend=c("trend","observation"), lty=c(1,NA), pch =c(NA,19), 
+       lwd=c(1,NA), col =c("black","grey"), bty="n")
+```
+
+But now say we decide that the legend is in the wrong place. Say we want the legend to be in the top right.
+
+Redraw the whole plot but change: 
+
+(i)   the dots to be blue triangles (look back to exercise 1)
+(ii)  the trend line such that it is a thick red dotted line
+(iii) the legend location to be in the topright position
+
+```{r}
+plot(log(diversity)~log(altitude), data = diversity, type = "p", pch=2, col ="blue",
+     ylab = "Diversity Index (log scale)", 
+     xlab ="Altitude above sea level (log scale)", 
+     main ="Relationship between diversity and altitude",
+     xlim = c(4,5),
+     ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+lm3 <-lm(log(diversity)~log(altitude), data = diversity)
+
+abline(lm3, lty =3, lwd=2, col ="red")
+
+legend("topright", legend=c("observation","trend"), lty=c(NA,3), pch =c(2,NA), 
+       lwd=c(1,2), col =c("blue","red"), bty="n")
+```
+
+# practice 1
+
+```{r}
+poly <- read.csv("polychlorinated biphenyl.csv")
+```
+
+```{r}
+head(poly)
+str(poly)
+summary(poly)
+```
+
+
+```{r}
+plot(PCB~Age, data = poly)  
+plot(log(PCB)~Age, data = poly)  
+plot(PCB~log(Age), data = poly)  
+plot(log(PCB)~log(Age), data = poly)  
+```
+
+
+```{r}
+plot(log(PCB)~log(Age), data = poly, type = "p", pch=2, col ="blue",
+     ylab = "PCB (log scale)", 
+     xlab ="Age (log scale)", 
+     main ="Relationship between PCB and Age",
+     #xlim = c(4,5),
+     #ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+
+```
+```{r}
+lm4_2 <-lm(log(PCB)~Age, data = poly)
+coef(lm4_2)
+```
+
+
+```{r}
+
+
+lm4 <-lm(log(PCB)~log(Age), data = poly)
+coef(lm4)
+
+#abline(lm4, lty =3, lwd=2, col ="red")
+
+
+```
+```{r}
+summary(lm4)
+summary(lm4_2)
+```
+
+
+```{r}
+plot(log(PCB)~log(Age), data = poly, type = "p", pch=2, col ="blue",
+     ylab = "PCB (log scale)", 
+     xlab ="Age (log scale)", 
+     main ="Relationship between PCB and Age",
+     #xlim = c(4,5),
+     #ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+lm4 <-lm(log(PCB)~log(Age), data = poly)
+
+abline(lm4, lty =3, lwd=2, col ="red")
+
+legend("topleft", legend=c("obseervation","trend"), lty=c(NA,3), pch =c(2,NA), 
+       lwd=c(1,2), col =c("blue","red"), bty="n")
+```
+
+# practice 2
+
+
+
+
+```{r}
+poplar <- read.csv("poplar.csv")
+```
+
+
+```{r}
+head(poplar)
+str(poplar)
+summary(poplar)
+```
+
+
+```{r}
+plot(weight~diameter, data = poplar)  
+plot(log(weight)~diameter, data = poplar)  # best
+plot(weight~log(diameter), data = poplar)  
+plot(log(weight)~log(diameter), data = poplar) 
+```
+
+```{r}
+plot(log(weight)~diameter, data = poplar, type = "p", pch=2, col ="blue",
+     ylab = "weight (log scale)", 
+     xlab ="diameter", 
+     main ="Relationship between weight and diameter",
+     #xlim = c(4,5),
+     #ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+```
+
+
+```{r}
+lm5 <-lm(log(weight)~diameter, data = poplar)
+coef(lm5)
+```
+```{r}
+lm5_2 <-lm(log(weight)~log(diameter), data = poplar)
+coef(lm5_2)
+```
+
+
+```{r}
+summary(lm5)
+summary(lm5_2)
+```
+
+## use log~linear
+
+
+```{r}
+plot(log(weight)~diameter, data = poplar, type = "p", pch=2, col ="blue",
+     ylab = "weight (log scale)", 
+     xlab ="diameter", 
+     main ="Relationship between weight and diameter",
+     #xlim = c(4,5),
+     #ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+
+lm5 <-lm(log(weight)~diameter, data = poplar)
+
+abline(lm5, lty =3, lwd=2, col ="red")
+
+legend("topleft", legend=c("observation","trend"), lty=c(NA,3), pch =c(2,NA), 
+       lwd=c(1,2), col =c("blue","red"), bty="n")
+```
+## use log~log
+
+```{r}
+plot(log(weight)~log(diameter), data = poplar, type = "p", pch=2, col ="blue",
+     ylab = "weight (log scale)", 
+     xlab ="diameter (log scale)", 
+     main ="Relationship between weight and diameter",
+     #xlim = c(4,5),
+     #ylim = c(-4.1,0),
+     font.main=4,
+     las=1)
+
+
+lm5_2 <-lm(log(weight)~log(diameter), data = poplar)
+
+abline(lm5_2, lty =3, lwd=2, col ="red")
+
+legend("topleft", legend=c("observation","trend"), lty=c(NA,3), pch =c(2,NA), 
+       lwd=c(1,2), col =c("blue","red"), bty="n")
+```
+
